@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.Socket;
+import java.util.Properties;
 
 //客户端(第三版本)
 public class ClientChatMain extends JFrame implements ActionListener, KeyListener {
@@ -22,6 +23,25 @@ public class ClientChatMain extends JFrame implements ActionListener, KeyListene
     private JButton jb;
     //输出流
     private BufferedWriter bw=null;
+
+    //客务端端口号
+    private static int clientPort;
+    //客务端IP
+    private static String clientIp;
+
+    static {
+        //加载外部配置文件
+        Properties prop = new Properties();
+        try {
+            prop.load(new FileInputStream(("chat.properties")));
+            //为属性赋值
+            clientPort=Integer.parseInt(prop.getProperty("clientPort"));
+            clientIp=prop.getProperty("clientIp");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     //初始化属性，使用构造方法
     public ClientChatMain(){
@@ -57,7 +77,7 @@ public class ClientChatMain extends JFrame implements ActionListener, KeyListene
         //4.关闭socket通道
         /***************TCP客户端结束******************/
         try {
-            Socket socket = new Socket("127.0.0.1", 8888);
+            Socket socket = new Socket(clientIp, clientPort);
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             String line=null;

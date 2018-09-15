@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Properties;
 
 //点击回车键实现发送功能，其实回车键在文本框中，故绑定文本框
 //服务端
@@ -27,6 +28,21 @@ public class ServerChatMain extends JFrame implements ActionListener, KeyListene
     //输出流
     private BufferedWriter bw=null;
 
+    //服务端端口号
+    private static int serverPort;
+
+    //一个类只会加载一次，使用静态代码块读取外部配置文件
+    static {
+        Properties prop = new Properties();
+        //加载
+        try {
+            prop.load(new FileInputStream("chat.properties"));
+            //给属性赋值
+            serverPort=Integer.parseInt(prop.getProperty("serverPort"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     //初始化属性，使用构造方法
     public ServerChatMain(){
         //初始化组件
@@ -69,7 +85,7 @@ public class ServerChatMain extends JFrame implements ActionListener, KeyListene
 
 
         try {
-            ServerSocket serverSocket = new ServerSocket(8888);
+            ServerSocket serverSocket = new ServerSocket(serverPort);
             Socket socket=serverSocket.accept();
             //3.获取socket通道的输入流(输入流实现读取数据，一行一行读)
             //InputStream in=socket.getInputStream();
