@@ -4,13 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+//点击回车键实现发送功能，其实回车键在文本框中，故绑定文本框
 //服务端
 //使用网络编程实现数据的传输（TCP）
-public class ServerChatMain extends JFrame implements ActionListener {
+public class ServerChatMain extends JFrame implements ActionListener, KeyListener {
     //主方法
     public static void main(String[] args) {
         new ServerChatMain();
@@ -53,6 +56,9 @@ public class ServerChatMain extends JFrame implements ActionListener {
         //给发送按钮绑定一个监听点击事件
         jb.addActionListener(this);
 
+        //给文本框绑定一个键盘点击事件
+        jtf.addKeyListener(this);
+
         /***************TCP服务端开始******************/
         //1.创建服务端的套接字
         //2.等待客户端连接
@@ -85,6 +91,12 @@ public class ServerChatMain extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         //System.out.println("发送按钮被点击了");
+        sendMessage();
+    }
+
+    //行为
+    //定义一个方法，将数据发送到socket通道中
+    private void sendMessage(){
         //1.获取文本框发送的的内容
         String text=jtf.getText();
         //2.拼接收据内容
@@ -102,5 +114,24 @@ public class ServerChatMain extends JFrame implements ActionListener {
             e1.printStackTrace();
         }
     }
-    //行为
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        //回车键(keyCode=10,keyText=Enter)，测试
+        //System.out.println(e);
+        if(e.getKeyCode()==KeyEvent.VK_ENTER){
+            sendMessage();
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
 }

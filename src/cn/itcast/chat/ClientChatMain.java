@@ -4,11 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.Socket;
 
 //客户端
-public class ClientChatMain extends JFrame implements ActionListener {
+public class ClientChatMain extends JFrame implements ActionListener, KeyListener {
     public static void main(String[] args) {
         new ClientChatMain();
     }
@@ -46,6 +48,8 @@ public class ClientChatMain extends JFrame implements ActionListener {
         //给按钮绑定一个监听事件
         jb.addActionListener(this);
 
+        jtf.addKeyListener(this);
+
         /***************TCP客户端开始******************/
         //1.创建客户端的套接字（尝试连接）
         //2.获取socket通道的输入流
@@ -69,18 +73,39 @@ public class ClientChatMain extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String text=jtf.getText();
-        text="服务端对客户端说："+text;
+        sendMessage();
+    }
+
+    //定义一个方法
+    private void sendMessage(){
+        String text = jtf.getText();
+        text="客户端对服务器说："+text;
         jta.append(text+System.lineSeparator());
         try {
-            //发送
             bw.write(text);
             bw.newLine();
             bw.flush();
             jtf.setText("");
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if(e.getKeyCode()==10){
+            //System.out.println(e);
+            sendMessage();
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
     //行为
 
