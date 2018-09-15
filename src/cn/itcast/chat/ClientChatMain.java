@@ -9,7 +9,7 @@ import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.Socket;
 
-//客户端
+//客户端(第三版本)
 public class ClientChatMain extends JFrame implements ActionListener, KeyListener {
     public static void main(String[] args) {
         new ClientChatMain();
